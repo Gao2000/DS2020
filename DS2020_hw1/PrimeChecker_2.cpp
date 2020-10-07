@@ -31,8 +31,8 @@ bool isPrime(unsigned long n) {
   unsigned long u = n - 1, t = 0;
   while(u % 2 == 0) { u >>= 1; t++;}
 
-  //unsigned long long sprp[3] = {2, 7, 61};
-  unsigned long long sprp[3] = {2, 379215, 457083754};
+  unsigned long long sprp[3] = {2, 7, 61};
+  //unsigned long long sprp[3] = {2, 379215, 457083754};
   for(int k = 0; k < 3; ++k) {
     unsigned long long a = sprp[k] % n;
     if(a == 0 || a == 1 || a == n - 1) continue;
@@ -56,10 +56,10 @@ unsigned long PRIMECHECKER::PrimeChecker(unsigned long a, unsigned long b) {
   unsigned long prime_num = 0;
   
   for(; a <= b; a++) {
-    if(a >= 4294967296) {
+  /*  if(a >= 4294967296) {
       if(isPrimeBasic(a)) prime_num++;
       continue;
-    } 
+    }*/ 
     if(isPrime(a)) prime_num++; //check the number is prime or not
   }
 	
