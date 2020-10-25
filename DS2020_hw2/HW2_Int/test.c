@@ -58,7 +58,7 @@ void check_changes(struct chain *r){
 
 bool check_zero(struct chain r){
   for(int i = 0; i <= r.n; i++)
-    if(abs(r.an[i]) >= 0)
+    if(abs(r.an[i]) != 0)
       return false;
   return true;
 }
@@ -104,42 +104,37 @@ int gcd(int i, int j){
 void simplest(struct chain *r){
   int n = (*r).n;
   int i = (*r).an[n];
-  printf("%d\n", i);
-  for(int j = n - 1; j >= 0; j--)
-    if((*r).an[j] != 0){
-      printf("%d\n", (*r).an[j]);
-      i = gcd(abs(i), abs((*r).an[j]));
-    }
 
-  printf("GCD: %d\n", i);
-  
+  //keep first term is positive
+  if((*r).an[(*r).n] < 0)
+    for(int j = (*r).n; j >= 0; j--)
+      (*r).an[j] *= -1;
+
+  for(int j = n - 1; j >= 0; j--)
+    if((*r).an[j] != 0)
+      i = gcd(abs(i), abs((*r).an[j]));
+
   for(int j = n; j >= 0; j--)
     (*r).an[j] /= i;
-
-  printf("ans:");
-  show((*r));
-  printf("\n\n");
 }
 
-void do_div(struct chain ch1, struct chain ch2) //Eculidean algorithim ch1 = q * ch2 + r
-{
+//Eculidean algorithim ch1 = q * ch2 + r
+void do_div(struct chain ch1, struct chain ch2){
   int i = 0, j;
   double tmp;
   struct chain q, r;
+  int lcm;
+  
+  //if ch1's degree need to biger than ch2
+  if(ch1.n < ch2.n){
+    do_div(ch2, ch1);
+    return;
+  }
+  
   if(check_zero(ch2)){
     printf("wrong ch2 is zero\n");
     exit(0);
   }
-  
-  //if(ch1.an[ch1.n] < ch2.an[ch2.n])
-  for(int k = 0; k <= ch1.n; k++) //keep ch1.n % ch2.n == 0 
-    ch1.an[k] *= ch2.an[ch2.n];
-
-  printf("////////////////////////////\nch1:");
-  show(ch1);
-  printf("ch2:");
-  show(ch2);
-  printf("////////////////////////////\n");
 
   q.n = ch1.n - ch2.n;
   r.n = ch1.n - 1;
@@ -147,6 +142,22 @@ void do_div(struct chain ch1, struct chain ch2) //Eculidean algorithim ch1 = q *
   r.an = (int*)calloc(r.n+1, sizeof(int));
 
   while(i <= q.n){
+    printf("////////////////////////////\n");
+    printf("ch1:");
+    show(ch1);
+    printf("ch2:");
+    show(ch2);
+    printf("////////////////////////////\n");
+    
+    simplest(&ch1); simplest(&ch2);
+
+    //keep ch1.an[ch1.n] % ch2.an[ch2.n] == 0
+    if(ch1.an[ch1.n] % ch2.an[ch2.n] == 0){
+      lcm = (ch2.an[ch2.n] / gcd(ch1.an[ch1.n], ch2.an[ch2.n])); //how many times lcm over ch1.an[ch1.n]
+      for(int k = 0; k <= ch1.n; k++)
+        ch1.an[k] *= lcm;
+    }
+
     r.n = ch1.n - 1;
     q.an[q.n - i] = ch1.an[ch1.n]/ch2.an[ch2.n];
     tmp = q.an[q.n - i];
@@ -157,8 +168,10 @@ void do_div(struct chain ch1, struct chain ch2) //Eculidean algorithim ch1 = q *
       else
         r.an[j] = ch1.an[j]; //lower term stay steady
     }
+
     if(check_zero(r)) break;
     ch1 = r;
+
     i++;
   }
   printf("===========================\n");
@@ -169,14 +182,12 @@ void do_div(struct chain ch1, struct chain ch2) //Eculidean algorithim ch1 = q *
   printf("===========================\n");
 
   check_changes(&r);
-  if(ch2.an[ch2.n] < 0)
-    for(int j = ch2.n; j >= 0; j--)
-      ch2.an[j] *= -1;
 
   if(r.n == -1){
     simplest(&ch2);
     show(ch2);
     free(r.an);
+    return;
   }
   else
     do_div(ch2, r);
@@ -186,8 +197,13 @@ void main(){
   struct chain ch1, ch2;
   creat_chain(&ch1);
   show(ch1);
+  simplest(&ch1);
+  show(ch1);
+
   printf("------------------------------------------------------\n");
   creat_chain(&ch2);
+  show(ch2);
+  simplest(&ch2);
   show(ch2);
 
   do_div(ch1,ch2);
