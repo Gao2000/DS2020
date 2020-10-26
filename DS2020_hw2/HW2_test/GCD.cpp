@@ -41,7 +41,6 @@ int check_changes(long in1[], int deg1);
 
 long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
   //========================================================//
-  cout << "test\n";
   cout << "in1:";
   show(in1);
   cout << "----------------------------------------" << endl;
@@ -49,7 +48,9 @@ long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
   show(in2);
   cout << "----------------------------------------" << endl;
   //--------------------------------------------------------//
-  
+ 
+  for(int i = 0; i < 1000; i++)
+    ans[i] = 0;
   //in1's degree need to biger than in2
   long * tmp;
   if(deg1 < deg2){
@@ -70,10 +71,9 @@ long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
   show(this->ans);
   cout << "========================================" << endl;
   //--------------------------------------------------------//
-  long * re_ans = new long(1000);	
+  long * re_ans = new long[1000];	
   for(int i = 0; i < 1000; i++)
     re_ans[i] = ans[i];
-  cout << "unvalid\n";
 
   return re_ans;
 }

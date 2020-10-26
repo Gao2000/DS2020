@@ -6,14 +6,15 @@
 #include <cmath>
 #include <iostream>
 
-long long_gcd(long i, long j);
+unsigned long long_gcd(unsigned long i, unsigned long j);
 void simplest(long *in1, int deg1);
 bool check_zero(long in1[], int deg1);
 int check_changes(long in1[], int deg1);
 
 long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
   //in1's degree need to biger than in2
-  cout << "test\n";
+  for(int i = 0; i < 1000; i++)
+    ans[i] = 0;
   long* tmp;
   if(deg1 < deg2){
     tmp = in2;
@@ -21,7 +22,7 @@ long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
     in1 = tmp;
   }
   do_div(in1, in2, deg1, deg2);
-  long *re_ans = new long(1000);
+  long *re_ans = new long[1000];
   for(int i = 0; i < 1000; i++)
     re_ans[i] = ans[i];
 	return re_ans;
@@ -83,7 +84,7 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
   }
 }
 
-long long_gcd(long i, long j){
+unsigned long long_gcd(unsigned long i, unsigned long j){
   int shift = 0;
 
   //GCD(0,j) == j, GCD(i,0) == i, GCD(0,0) == 0
