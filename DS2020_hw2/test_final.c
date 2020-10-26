@@ -153,7 +153,7 @@ void do_div(struct chain ch1, struct chain ch2){
     simplest(&ch1); simplest(&ch2);
 
     //keep ch1.an[ch1.n] % ch2.an[ch2.n] == 0
-    if(ch1.an[ch1.n] % ch2.an[ch2.n] == 0){
+    if(ch1.an[ch1.n] % ch2.an[ch2.n] != 0){
       lcm = (ch2.an[ch2.n] / gcd(ch1.an[ch1.n], ch2.an[ch2.n])); //how many times lcm over ch1.an[ch1.n]
       for(int k = 0; k <= ch1.n; k++)
         ch1.an[k] *= lcm;
