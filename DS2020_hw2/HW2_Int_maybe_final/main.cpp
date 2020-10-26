@@ -38,6 +38,7 @@ int main(int argc, char** argv){
 
 	while(LineParser(fin, in1, &deg1) && LineParser(fin, in2, &deg2) && LineParser(fin, ans, &deg)){
 		total_num++;
+    //cout << "TEST" << total_num << endl; //-------------------
 		t_use_start = clock();
 		//your code
 		out = Gcd.FindGCD(in1, in2, deg1, deg2);
@@ -48,8 +49,9 @@ int main(int argc, char** argv){
 		check=1;
 		for(i=0;i<ARRAY_MAX;i++){ if(out[i]!=ans[i]){ check=0; break; } }
 		if( check ){ correct_num++; }
-		
+    else cout << "test" << total_num << endl; //-------------------
 		if( out!=in1 && out!=in2 ){ delete [] out; }//delete out if you allocate new memory to out
+    //cout << "test" << total_num << endl; //-------------------
 	}
 	
 	delete [] in1, in2, ans;

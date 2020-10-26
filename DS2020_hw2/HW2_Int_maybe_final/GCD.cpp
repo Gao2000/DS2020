@@ -6,61 +6,30 @@
 #include <cmath>
 #include <iostream>
 
-void show(long *in1){
-  int i = 999; //degree
-  bool f = true;
-  while(i >= 0){
-    if(in1[i] == 0){ 
-      i--;
-      continue;
-    }
-    if((in1[i] >= 0) && !f)
-      cout << "+";
-    f = false;
-    switch(i)
-    {
-      case 1:
-        cout << in1[i] << "X";
-        break;
-      case 0:
-        cout << in1[i];
-        break;
-      default:
-        cout << in1[i]<< "X^" << i;
-        break;
-    }
-    i--;
-  }
-  cout << endl;
-}
-
-long long_gcd(unsigned long i, unsigned long j);
+unsigned long long_gcd(unsigned long i, unsigned long j);
 void simplest(long *in1, int deg1);
 bool check_zero(long in1[], int deg1);
 int check_changes(long in1[], int deg1);
 
 long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
+  //in1's degree need to biger than in2
   for(int i = 0; i < 1000; i++)
     ans[i] = 0;
-  //in1's degree need to biger than in2
-  long * tmp;
-  int temp;
+  long* tmp; int temp;
   if(deg1 < deg2){
     tmp = in2;
     in2 = in1;
     in1 = tmp;
-    
+
     temp = deg1;
     deg1 = deg2;
     deg2 = temp;
   }
-
   do_div(in1, in2, deg1, deg2);
-  long * re_ans = new long[1000];	
+  long *re_ans = new long[1000];
   for(int i = 0; i < 1000; i++)
     re_ans[i] = ans[i];
-
-  return re_ans;
+	return re_ans;
 }
 
 //Eculidean algorithim in1 = q * in2 + r
@@ -78,29 +47,14 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
   }
 
   while(i <= deg_q){
-    for(int j = 0; j < 1000; j++)
-      r[j] = 0;
-    deg1 = check_changes(in1, deg1); deg2 = check_changes(in2, deg2);
     simplest(in1, deg1); simplest(in2, deg2);
-    //========================================================//
-    cout << "========================================" << endl;
-    cout << "after simplest" << endl;
-    cout << "in1:";
-    show(in1);
-    cout << "degree of in1 " << deg1 << endl;
-    cout << "----------------------------------------" << endl;
-    cout << "in2:";
-    show(in2);
-    cout << "degree of in2 " << deg2 << endl;
-    cout << "----------------------------------------" << endl;
-    //--------------------------------------------------------//
 
     //keep in1[deg1] % in2[deg2] = 0
-//    if(in1[deg1] % in2[deg2] != 0){
+   if(in1[deg1] % in2[deg2] != 0){
       long lcm_first_term = (in2[deg2] / long_gcd(in1[deg1], in2[deg2]));
       for(int j = 0; j <= deg1; j++)
         in1[j] *= lcm_first_term;
-//    }
+  }
 
     deg_r = deg1 - 1;
     q[deg_q - i] = in1[deg1] / in2[deg2];
@@ -114,32 +68,17 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
     }
 
     if(check_zero(r, deg_r)) break;
-    cout << "\n\n----------------------\n" << deg_r << "\n----------------" << endl;
-    deg_r = check_changes(r, deg_r);
     //in1 = r
-    for(int j = 0; j <= deg_r; j++)
+    for(int j = 0; j <= deg1; j++)
       in1[j] = r[j];
-    for(int j = 999; j > deg_r; j--)
-      in1[j] = 0;
-    
-    //==============================================================//
-    cout << "\n\n\n\n\n***********div***************\n";
-    cout << "degree of r:" << deg_r << endl;
-    cout << "in1: ";
-    show(in1);
-    cout << "r :";
-    show(r);
-    cout << "***********div***************\n\n\n\n\n\n\n";
-    //--------------------------------------------------------------//
     deg1 = deg_r;
-    
-
+    //
     i++;
   }
 
   deg_r = check_changes(r, deg_r);
   if(deg_r == -1){
-    deg2 = check_changes(in2, deg2);
+    deg2 = check_changes(in2,deg2);
     simplest(in2, deg2);
     for(int j = 0; j <= deg2; j++)
       this->ans[j] = in2[j];
@@ -150,7 +89,7 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
   }
 }
 
-long long_gcd(unsigned long i, unsigned long j){
+unsigned long long_gcd(unsigned long i, unsigned long j){
   int shift = 0;
 
   //GCD(0,j) == j, GCD(i,0) == i, GCD(0,0) == 0
@@ -203,7 +142,6 @@ void simplest(long *in1, int deg1){
   for(int i = deg1; i >= 0; i--)
     in1[i] /= f;
 }
-
 //cheack the in1 is nonzero
 bool check_zero(long in1[], int deg1){
   for(int i = deg1; i >= 0; i--)
@@ -211,7 +149,6 @@ bool check_zero(long in1[], int deg1){
       return false;
   return true;
 }
-
 //cheack the changes of in1's degree
 int check_changes(long in1[], int deg1){
   while((in1[deg1] == 0) && (deg1 >= 0))
