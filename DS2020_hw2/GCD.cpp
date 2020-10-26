@@ -15,11 +15,15 @@ long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
   //in1's degree need to biger than in2
   for(int i = 0; i < 1000; i++)
     ans[i] = 0;
-  long* tmp;
+  long* tmp; int temp;
   if(deg1 < deg2){
     tmp = in2;
     in2 = in1;
     in1 = tmp;
+
+    temp = deg1;
+    deg1 = deg2;
+    deg2 = temp;
   }
   do_div(in1, in2, deg1, deg2);
   long *re_ans = new long[1000];

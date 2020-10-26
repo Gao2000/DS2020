@@ -53,24 +53,18 @@ long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
     ans[i] = 0;
   //in1's degree need to biger than in2
   long * tmp;
+  int temp;
   if(deg1 < deg2){
     tmp = in2;
     in2 = in1;
     in1 = tmp;
+    
+    temp = deg1;
+    deg1 = deg2;
+    deg2 = temp;
   }
-  //========================================================//
-  cout << "in1:";
-  show(in1);
-  cout << "----------------------------------------" << endl;
-  cout << "in2:";
-  show(in2);
-  cout << "----------------------------------------" << endl;
-  //--------------------------------------------------------//
+
   do_div(in1, in2, deg1, deg2);
-  //========================================================//
-  show(this->ans);
-  cout << "========================================" << endl;
-  //--------------------------------------------------------//
   long * re_ans = new long[1000];	
   for(int i = 0; i < 1000; i++)
     re_ans[i] = ans[i];
@@ -92,6 +86,8 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
     return;
   }
   //========================================================//
+  cout << "========================================" << endl;
+  cout << "before simplest" << endl;
   cout << "in1:";
   show(in1);
   cout << "----------------------------------------" << endl;
@@ -102,6 +98,16 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
 
   while(i <= deg_q){
     simplest(in1, deg1); simplest(in2, deg2);
+    //========================================================//
+    cout << "========================================" << endl;
+    cout << "after simplest" << endl;
+    cout << "in1:";
+    show(in1);
+    cout << "----------------------------------------" << endl;
+    cout << "in2:";
+    show(in2);
+    cout << "----------------------------------------" << endl;
+    //--------------------------------------------------------//
 
     //keep in1[deg1] % in2[deg2] = 0
     if(in1[deg1] % in2[deg2] != 0){
@@ -125,19 +131,12 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
     //in1 = r
     for(int j = 0; j <= deg1; j++)
       in1[j] = r[j];
+    deg_r = check_changes(r, deg_r);
     deg1 = deg_r;
     //
     i++;
   }
 
-  //========================================================//
-  cout << "in1:";
-  show(in1);
-  cout << "----------------------------------------" << endl;
-  cout << "in2:";
-  show(in2);
-  cout << "----------------------------------------" << endl;
-  //--------------------------------------------------------//
   
   deg_r = check_changes(r, deg_r);
   if(deg_r == -1){
