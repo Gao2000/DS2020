@@ -6,25 +6,76 @@
 #include <cmath>
 #include <iostream>
 
+void show(long *in1){
+  int i = 999; //degree
+  bool f = true;
+  while(i >= 0){
+    if(in1[i] == 0){ 
+      i--;
+      continue;
+    }
+    if((in1[i] >= 0) && !f)
+      cout << "+";
+    f = false;
+    switch(i)
+    {
+      case 1:
+        cout << in1[i] << "X";
+        break;
+      case 0:
+        cout << in1[i];
+        break;
+      default:
+        cout << in1[i]<< "X^" << i;
+        break;
+    }
+    i--;
+  }
+  cout << endl;
+}
+
 long long_gcd(long i, long j);
 void simplest(long *in1, int deg1);
 bool check_zero(long in1[], int deg1);
 int check_changes(long in1[], int deg1);
 
 long* GCD::FindGCD(long *in1,long *in2,int deg1,int deg2){
-  //in1's degree need to biger than in2
+  //========================================================//
   cout << "test\n";
-  long* tmp;
+  cout << "in1:";
+  show(in1);
+  cout << "----------------------------------------" << endl;
+  cout << "in2:";
+  show(in2);
+  cout << "----------------------------------------" << endl;
+  //--------------------------------------------------------//
+  
+  //in1's degree need to biger than in2
+  long * tmp;
   if(deg1 < deg2){
     tmp = in2;
     in2 = in1;
     in1 = tmp;
   }
+  //========================================================//
+  cout << "in1:";
+  show(in1);
+  cout << "----------------------------------------" << endl;
+  cout << "in2:";
+  show(in2);
+  cout << "----------------------------------------" << endl;
+  //--------------------------------------------------------//
   do_div(in1, in2, deg1, deg2);
-  long *re_ans = new long(1000);
+  //========================================================//
+  show(this->ans);
+  cout << "========================================" << endl;
+  //--------------------------------------------------------//
+  long * re_ans = new long(1000);	
   for(int i = 0; i < 1000; i++)
     re_ans[i] = ans[i];
-	return re_ans;
+  cout << "unvalid\n";
+
+  return re_ans;
 }
 
 //Eculidean algorithim in1 = q * in2 + r
@@ -40,6 +91,14 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
     this->ans[0] = 1;
     return;
   }
+  //========================================================//
+  cout << "in1:";
+  show(in1);
+  cout << "----------------------------------------" << endl;
+  cout << "in2:";
+  show(in2);
+  cout << "----------------------------------------" << endl;
+  //--------------------------------------------------------//
 
   while(i <= deg_q){
     simplest(in1, deg1); simplest(in2, deg2);
@@ -71,6 +130,15 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
     i++;
   }
 
+  //========================================================//
+  cout << "in1:";
+  show(in1);
+  cout << "----------------------------------------" << endl;
+  cout << "in2:";
+  show(in2);
+  cout << "----------------------------------------" << endl;
+  //--------------------------------------------------------//
+  
   deg_r = check_changes(r, deg_r);
   if(deg_r == -1){
     simplest(in2, deg2);
