@@ -74,6 +74,7 @@ void GCD::do_div(long *in1, long *in2, int deg1, int deg2){
 
   deg_r = check_changes(r, deg_r);
   if(deg_r == -1){
+    deg2 = check_changes(in2,deg2);
     simplest(in2, deg2);
     for(int j = 0; j <= deg2; j++)
       this->ans[j] = in2[j];
