@@ -9,7 +9,7 @@
 #include <cstdlib>
 
 using namespace std;
- 
+
 __int128_t gcd(__int128_t a,__int128_t b)
 {
 	if(a && b){
@@ -168,19 +168,6 @@ Poly Poly::operator-(const Poly& b)
 	}
 	for(;b_pos<b.terms;b_pos++){
 		ans.new_term(b.t_array[b_pos].exp,-b.t_array[b_pos].coef);
-	}
-	return ans;
-}
-
-Poly Poly::operator*(const Poly& b)
-{
-	Poly ans;
-	for(int i=0;i<b.terms;i++){
-		Poly temp=*this;
-		for(int j=0;j<terms;j++){
-			temp.t_array[j].exp+=b.t_array[i].exp;
-		}
-		ans=ans+temp;
 	}
 	return ans;
 }

@@ -29,11 +29,10 @@ public:
 	~Poly(){ }
 	Poly operator+(const Poly&);
 	Poly operator-(const Poly&);
-	Poly operator*(const Poly&);
 	Poly operator%(const Poly&);
-	Poly new_term(int,__int128_t);
-	Poly transform(long*);
-	Poly reduce();
+	Poly new_term(__int128_t, int);
+	Poly transform(long*, int);
+	Poly simplest();
 };
 
 class GCD
