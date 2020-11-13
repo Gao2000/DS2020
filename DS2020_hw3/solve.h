@@ -14,10 +14,27 @@
 
 using namespace std;
 
-class solve {
-private:        
+template<class T>
+class Stack{
+  private:
+    T * stack;
+    int top;
+    int capacity;
+  public:
+    Stack(int stackcapacity = 10);
+    ~Stack();
+    T& Top() const;
+    bool IsEmpty() const;
+    void Push(const T& item);
+    void Pop();
+    T& term(int) const;
+};
 
-public:
+
+class solve {
+  private:
+    Stack<int> ans, question;
+  public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
     solve() {}
 };
