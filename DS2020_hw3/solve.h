@@ -16,6 +16,7 @@ using namespace std;
 
 template<class T>
 class Stack{
+  friend class solve;
   private:
     T * stack;
     int top;
@@ -27,15 +28,18 @@ class Stack{
     bool IsEmpty() const;
     void Push(const T& item);
     void Pop();
-    T& term(int) const;
+    T& term(int) const; // return stack[int]
+    int num() const; // return the total term num
+    void clear();
 };
 
 
 class solve {
   private:
-    Stack<int> ans, question;
+    Stack<int> ans, ques_candidates, negative, Target;
   public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
+    void transform(int, int, int, vector<int>);
     solve() {}
 };
 
