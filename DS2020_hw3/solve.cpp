@@ -81,18 +81,17 @@ bool solve::find(){
   for(int i = 0; i <= Target.num(); i++){
     if(Target.term(i) < current)            // <
       continue;
+    /*
     else if(Target.term(i) == current){     // =
       has_find = true;
       Push_ans(); 
       continue; 
     }
+    */
     else{                                   // >
       for(int j = (Target.term(i) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
         ans.Push(j);
-        if(find()){
-          ans.Pop();
-          break;
-        }
+        find();
         ans.Pop();
       }
     }
