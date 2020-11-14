@@ -7,6 +7,10 @@
 #include "solve.h"
 
 void solve::calculate(int target, int limit, int candidates_num, vector<int> candidates, vector< vector<int> > &solutions) {
+
+  ans.clear(); ques_candidates.clear(); negative.clear(); Target.clear();
+  ans_time = 0; neg_limit = limit;
+
   transform(target, limit, candidates_num, candidates);
 
   /*--------------------------------------------------*
@@ -20,10 +24,9 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
     cout << endl;
    *--------------------------------------------------*/
 
-  find(); 
+  find(solutions); 
 
-  ans.clear(); ques_candidates.clear(); negative.clear(); Target.clear();
-  ans_time = 0;
+  return;
 }
 
 void solve::transform(int target, int limit, int candidates_num, vector<int> candidates){
@@ -61,8 +64,7 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
   return;
 }
 
-bool solve::find(){
-  bool has_find = false;
+void solve::find(vector< vector<int> > &s){
   //calculate the current sum
   int current = 0;
   for(int i = 0; i <= ans.num(); i++)
@@ -71,42 +73,121 @@ bool solve::find(){
   if(ques_candidates.num() == ans.num()){
     for(int i = 0; i <= Target.num(); i++)
       if(Target.term(i) == current){     // =
-        has_find = true; 
-        Push_ans(); 
-        continue; 
+        Push_ans(i, s);
+        return;
       }
-    return has_find;
+    return;
   }
 
   for(int i = 0; i <= Target.num(); i++){
     if(Target.term(i) < current)            // <
       continue;
-    /*
-    else if(Target.term(i) == current){     // =
-      has_find = true;
-      Push_ans(); 
-      continue; 
-    }
-    */
     else{                                   // >
       for(int j = (Target.term(i) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
         ans.Push(j);
-        find();
+        find(s);
         ans.Pop();
       }
     }
   }
 }
 
-void solve::Push_ans(){
+void solve::Push_ans(int t, vector< vector<int> > & s){
+  ///*-------------------------------------------------------------*
   if(ans_time < 10){
-    ans_time++;
     cout << endl;
-    cout << "Ans : " <<ans_time << endl;
     for(int i = 0; i <= ans.num(); i++)
-      cout << i << ":" << ques_candidates.term(i) << "*" << ans.term(i) << endl;
+      cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
     cout << endl;
   }
+  ///--------------------------------------------------------------*/
+
+
+  /*-------------------------------------------------------------*
+    if(ans_time < 10){
+    cout << "\n---Check---" << endl;
+    cout << "Ans : " << ans_time << endl;
+    for(int i = 0; i <= ans.num(); i++)
+    cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
+    cout << endl;
+    }
+  /--------------------------------------------------------------*/
+
+  if(ans_time == 0){
+    ans_time++;
+    s.resize(ans_time);
+    for(int i = 0; i <= ans.num(); i++)
+      for(int j = 0; j < ans.term(i); j++)
+        s[ans_time - 1].push_back(ques_candidates.term(i));
+    Push_negative(t, s);
+    return;
+  }
+  else{
+    /*--------------------------------------------------------------/
+     *--------------------DEALL WITH THIS SECTION!------------------/
+     *-------------------------------------------------------------*/ 
+    bool exist = false;
+    for(int k = 0; k < s.size(); k++)
+      for(int i = 0, temp = 0; (i <= ans.num()) && (temp < s[ans_time - 1].size()); i++)
+        for(int j = 0; (j < ans.term(i)) && (temp < s[ans_time - 1].size()); j++){
+          //cout << "check : " << ques_candidates.term(i) << " | " << s[ans_time - 1][temp] << endl;
+          if(ques_candidates.term(i) == s[ans_time - 1][temp])
+            return;
+          temp++;
+        }
+
+    exist = true;
+    if(exist){
+
+      /*-------------------------------------------------------------*
+      if(ans_time < 10){
+        cout << endl;
+        for(int i = 0; i <= ans.num(); i++)
+          cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
+        cout << endl;
+      }
+      /--------------------------------------------------------------*/
+
+      ans_time++;
+      s.resize(ans_time);
+      for(int i = 0; i <= ans.num(); i++)
+        for(int j = 0; j < ans.term(i); j++)
+          s[ans_time - 1].push_back(ques_candidates.term(i));
+      Push_negative(t, s);
+      return;
+    }
+  }
+}
+
+void solve::Push_negative(int t, vector< vector<int> > &s){
+  switch(neg_limit){
+    case 0:
+      break; 
+    case 1:
+      for(int i = negative.num(); i >= 0; i--)
+        if(Target.term(t) == Target.term(0) - negative.term(i))
+          s[ans_time - 1].push_back(negative.term(i));
+      break;
+    case 2:
+      for(int i = negative.num(); i >= 0; i--)
+        for(int j = i; j >= 0; j--)
+          if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j)))){
+            s[ans_time - 1].push_back(negative.term(i));
+            s[ans_time - 1].push_back(negative.term(j));
+          }
+      break;
+  }
+  ///*-----------------------------------------------------*/
+  if(ans_time < 10){
+    cout << endl;
+    cout << "-------------------------------------Ans : " << ans_time << endl;
+    for(int i = 0; i < s[ans_time - 1].size(); i++)
+      cout << s[ans_time - 1][i] << endl;
+    cout << endl;
+  }
+  //-------------------------------------------------------*/
+
+
 }
 
 //Stack part

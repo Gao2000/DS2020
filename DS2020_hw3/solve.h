@@ -38,11 +38,13 @@ class solve {
   private:
     Stack<int> ans, ques_candidates, negative, Target;
     int ans_time;
+    int neg_limit;
   public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
     void transform(int, int, int, vector<int>);
-    bool find();
-    void Push_ans();
+    void find(vector< vector<int> > &);
+    void Push_ans(int, vector< vector<int> > &);
+    void Push_negative(int, vector< vector<int> > &);
     solve() {}
 };
 
