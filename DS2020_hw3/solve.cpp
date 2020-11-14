@@ -9,46 +9,43 @@
 void solve::calculate(int target, int limit, int candidates_num, vector<int> candidates, vector< vector<int> > &solutions) {
   transform(target, limit, candidates_num, candidates);
 
-  /*--------------------------------------------------*/
-  cout << "Ques : ";
-  for(int i = 0; i <= ques_candidates.num(); i++)
+  /*--------------------------------------------------*
+    cout << "Ques : ";
+    for(int i = 0; i <= ques_candidates.num(); i++)
     cout << ques_candidates.term(i) << " ";
-  cout << endl;
-  cout << "Target : ";
-  for(int i = 0; i <= Target.num(); i++)
+    cout << endl;
+    cout << "Target : ";
+    for(int i = 0; i <= Target.num(); i++)
     cout << Target.term(i) << " ";
-  cout << endl;
-  /*--------------------------------------------------*/
+    cout << endl;
+   *--------------------------------------------------*/
+
+  find(); 
 
   ans.clear(); ques_candidates.clear(); negative.clear(); Target.clear();
+  ans_time = 0;
 }
 
 void solve::transform(int target, int limit, int candidates_num, vector<int> candidates){
   Target.Push(target);
-  
+
   for(int i = 0; i < candidates_num; i++){
     if(candidates[i] < 0){
       negative.Push(candidates[i]);
-      cout << candidates[i] << endl;
+      //cout << candidates[i] << endl;
     }else if(candidates[i] > 0){
       ques_candidates.Push(candidates[i]);
-      cout << candidates[i] << endl;
+      //cout << candidates[i] << endl;
     }
   }
   /*--------------------------------------------------*
-  cout << "Ques : ";
-  for(int i = 0; i <= ques_candidates.num(); i++)
+    cout << "Ques : ";
+    for(int i = 0; i <= ques_candidates.num(); i++)
     cout << ques_candidates.term(i) << " ";
-  cout << endl;
-  *--------------------------------------------------*/
-  
-  if(!(negative.IsEmpty()) && limit != 0){
-    
-    cout << "Neg : ";
-    for(int i = 0; i <= negative.num(); i++)
-      cout << negative.term(i) << " ";
     cout << endl;
-    
+   *--------------------------------------------------*/
+
+  if(!(negative.IsEmpty()) && limit != 0){
     switch(limit){
       case 1:
         for(int i = negative.num(); i >= 0; i--)
@@ -62,6 +59,55 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
     }
   }
   return;
+}
+
+bool solve::find(){
+  bool has_find = false;
+  //calculate the current sum
+  int current = 0;
+  for(int i = 0; i <= ans.num(); i++)
+    current += ques_candidates.term(i) * ans.term(i);
+
+  if(ques_candidates.num() == ans.num()){
+    for(int i = 0; i <= Target.num(); i++)
+      if(Target.term(i) == current){     // =
+        has_find = true; 
+        Push_ans(); 
+        continue; 
+      }
+    return has_find;
+  }
+
+  for(int i = 0; i <= Target.num(); i++){
+    if(Target.term(i) < current)            // <
+      continue;
+    else if(Target.term(i) == current){     // =
+      has_find = true;
+      Push_ans(); 
+      continue; 
+    }
+    else{                                   // >
+      for(int j = (Target.term(i) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
+        ans.Push(j);
+        if(find()){
+          ans.Pop();
+          break;
+        }
+        ans.Pop();
+      }
+    }
+  }
+}
+
+void solve::Push_ans(){
+  if(ans_time < 10){
+    ans_time++;
+    cout << endl;
+    cout << "Ans : " <<ans_time << endl;
+    for(int i = 0; i <= ans.num(); i++)
+      cout << i << ":" << ques_candidates.term(i) << "*" << ans.term(i) << endl;
+    cout << endl;
+  }
 }
 
 //Stack part
@@ -129,5 +175,5 @@ void Stack<T>::clear(){
   delete stack;
   stack = new T[10];
   top = -1;
-  capacity = 0;
+  capacity = 10;
 }

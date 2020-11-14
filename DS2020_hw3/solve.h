@@ -37,9 +37,12 @@ class Stack{
 class solve {
   private:
     Stack<int> ans, ques_candidates, negative, Target;
+    int ans_time;
   public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
     void transform(int, int, int, vector<int>);
+    bool find();
+    void Push_ans();
     solve() {}
 };
 
