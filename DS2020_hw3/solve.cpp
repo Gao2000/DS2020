@@ -15,14 +15,13 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
 
   find(solutions); 
 
-  //Print_ans(solutions);
+  Print_ans(solutions);
 
   return;
 }
 
 void solve::transform(int target, int limit, int candidates_num, vector<int> candidates){
-  Target.Push(target);
-
+  //push the candidates
   for(int i = 0; i < candidates_num; i++){
     if(candidates[i] < 0)
       negative.Push(candidates[i]);
@@ -30,13 +29,20 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
       ques_candidates.Push(candidates[i]);
   }
 
+  //calculate all the possible target
+  Target.Push(target);
   if(!(negative.IsEmpty()) && limit != 0){
     switch(limit){
       case 1:
+        //for one negative
         for(int i = negative.num(); i >= 0; i--)
           Target.Push(target - negative.term(i));
         break;
       case 2:
+        //for one negative
+        for(int i = negative.num(); i >= 0; i--)
+          Target.Push(target - negative.term(i));
+        //for two negative
         for(int i = negative.num(); i >= 0; i--)
           for(int j = i; j >= 0; j--)
             Target.Push(target - (negative.term(i) + negative.term(j)));
@@ -80,24 +86,22 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
   for(int i = 0; i <= ans.num(); i++)
     for(int j = 0; j < ans.term(i); j++)
       temp.push_back(ques_candidates.term(i));
-  switch(neg_limit){
-    case 0:
-      break; 
-    case 1:
-      if(t == 0) break;
-      for(int i = negative.num(); i >= 0; i--)
-        if(Target.term(t) == Target.term(0) - negative.term(i))
-          temp.push_back(negative.term(i));
-      break;
-    case 2:
-      if(t == 0) break;
-      for(int i = negative.num(); i >= 0; i--)
-        for(int j = i; j >= 0; j--)
-          if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j)))){
-            temp.push_back(negative.term(i));
-            temp.push_back(negative.term(j));
-          }
-      break;
+  
+  if(t != 0){
+    if(t <= negative.num()+1)
+      temp.push_back(negative.term(negative.num() - (t - 1)));
+    else{
+      int i;
+      int shift = negative.num() + 1;
+      for(i = negative.num(); i >= 0; i--){
+        if((t - shift) <= i)
+          break;
+        else
+          shift += i;
+      }
+      temp.push_back(negative.term(i));
+      temp.push_back(negative.term(negative.num() - (t - shift + 1)));
+    }
   }
 
   if(ans_time == 0){
@@ -108,12 +112,11 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
   }
   else{
     bool exist = true;
-    for(int i = 0; i < s.size(); i++)
+    for(int i = s.size() - 1; i >= ans_time % 20; i--)
       if(temp == s[i])
         exist = false;
     
     if(exist){
-
       ans_time++;
       s.resize(ans_time);
       s[ans_time - 1].insert(s[ans_time - 1].end(), temp.begin(), temp.end());
@@ -124,6 +127,7 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
 
 // Print ANS
 void solve::Print_ans(vector< vector<int> > &s){
+  cout << "\n-----------Start--------------\n";
   for(int i = 0; i < s.size(); i++){
     cout << i;
     for(int j = 0; j < s[i].size(); j++)
@@ -133,9 +137,13 @@ void solve::Print_ans(vector< vector<int> > &s){
   cout << "\n------------END---------------\n";
 }
 
+
+//---------------------------------------------------------------------------------------------//
+//
 /* -----------------------------------------------------------/
  * ---------------------- STACK PART -------------------------/
  * ----------------------------------------------------------*/
+
 template<class T>
 Stack<T>::Stack(int stackcapacity): capacity(stackcapacity){
   if(capacity < 1) cout << "Stack must be > 0" << endl;
