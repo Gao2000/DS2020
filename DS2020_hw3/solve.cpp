@@ -28,6 +28,19 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
     else if(candidates[i] > 0)
       ques_candidates.Push(candidates[i]);
   }
+  
+  while(1){
+    if(negative.IsEmpty())
+      if(ques_candidates.Top() > target)
+        ques_candidates.Pop();
+      else
+        break;
+    else
+      if(ques_candidates.Top() > target - 2 * negative.term(0))
+        ques_candidates.Pop();
+      else
+        break;
+  }
 
   //calculate all the possible target
   Target.Push(target);
@@ -112,7 +125,7 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
   }
   else{
     bool exist = true;
-    for(int i = s.size() - 1; i >= ans_time % 20; i--)
+    for(int i = s.size() - 1; i >= ans_time / 10; i--)
       if(temp == s[i])
         exist = false;
     
