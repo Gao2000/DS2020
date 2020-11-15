@@ -13,17 +13,6 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
 
   transform(target, limit, candidates_num, candidates);
 
-  /*--------------------------------------------------*
-    cout << "Ques : ";
-    for(int i = 0; i <= ques_candidates.num(); i++)
-    cout << ques_candidates.term(i) << " ";
-    cout << endl;
-    cout << "Target : ";
-    for(int i = 0; i <= Target.num(); i++)
-    cout << Target.term(i) << " ";
-    cout << endl;
-   *--------------------------------------------------*/
-
   find(solutions); 
 
   return;
@@ -33,20 +22,11 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
   Target.Push(target);
 
   for(int i = 0; i < candidates_num; i++){
-    if(candidates[i] < 0){
+    if(candidates[i] < 0)
       negative.Push(candidates[i]);
-      //cout << candidates[i] << endl;
-    }else if(candidates[i] > 0){
+    else if(candidates[i] > 0)
       ques_candidates.Push(candidates[i]);
-      //cout << candidates[i] << endl;
-    }
   }
-  /*--------------------------------------------------*
-    cout << "Ques : ";
-    for(int i = 0; i <= ques_candidates.num(); i++)
-    cout << ques_candidates.term(i) << " ";
-    cout << endl;
-   *--------------------------------------------------*/
 
   if(!(negative.IsEmpty()) && limit != 0){
     switch(limit){
@@ -64,6 +44,7 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
   return;
 }
 
+// recursive method to find the anwer
 void solve::find(vector< vector<int> > &s){
   //calculate the current sum
   int current = 0;
@@ -72,7 +53,7 @@ void solve::find(vector< vector<int> > &s){
 
   if(ques_candidates.num() == ans.num()){
     for(int i = 0; i <= Target.num(); i++)
-      if(Target.term(i) == current){     // =
+      if(Target.term(i) == current){        // =
         Push_ans(i, s);
         return;
       }
@@ -93,14 +74,37 @@ void solve::find(vector< vector<int> > &s){
 }
 
 void solve::Push_ans(int t, vector< vector<int> > & s){
-  ///*-------------------------------------------------------------*
+  /*-------------------------------------------------------------*
   if(ans_time < 10){
     cout << endl;
     for(int i = 0; i <= ans.num(); i++)
       cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
     cout << endl;
   }
-  ///--------------------------------------------------------------*/
+  /--------------------------------------------------------------*/
+  
+  vector <int> temp;
+  for(int i = 0; i <= ans.num(); i++)
+    for(int j = 0; j < ans.term(i); j++)
+      temp.push_back(ques_candidates.term(i));
+  switch(neg_limit){
+    case 0:
+      break; 
+    case 1:
+      for(int i = negative.num(); i >= 0; i--)
+        if(Target.term(t) == Target.term(0) - negative.term(i))
+          s[ans_time - 1].push_back(negative.term(i));
+      break;
+    case 2:
+      for(int i = negative.num(); i >= 0; i--)
+        for(int j = i; j >= 0; j--)
+          if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j)))){
+            s[ans_time - 1].push_back(negative.term(i));
+            s[ans_time - 1].push_back(negative.term(j));
+          }
+      break;
+  }
+
 
 
   /*-------------------------------------------------------------*
@@ -111,7 +115,7 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
     cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
     cout << endl;
     }
-  /--------------------------------------------------------------*/
+    /--------------------------------------------------------------*/
 
   if(ans_time == 0){
     ans_time++;
@@ -126,34 +130,31 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
     /*--------------------------------------------------------------/
      *--------------------DEALL WITH THIS SECTION!------------------/
      *-------------------------------------------------------------*/ 
-    bool exist = false;
-    for(int k = 0; k < s.size(); k++)
+
+    /*--------------------------------------------------------------/
+      for(int k = 0; k < s.size(); k++)
       for(int i = 0, temp = 0; (i <= ans.num()) && (temp < s[ans_time - 1].size()); i++)
-        for(int j = 0; (j < ans.term(i)) && (temp < s[ans_time - 1].size()); j++){
-          //cout << "check : " << ques_candidates.term(i) << " | " << s[ans_time - 1][temp] << endl;
-          if(ques_candidates.term(i) == s[ans_time - 1][temp])
-            return;
-          temp++;
-        }
+      for(int j = 0; (j < ans.term(i)) && (temp < s[ans_time - 1].size()); j++){
+    //cout << "check : " << ques_candidates.term(i) << " | " << s[ans_time - 1][temp] << endl;
+    if(ques_candidates.term(i) == s[ans_time - 1][temp])
+    return;
+    temp++;
+    }
+    //-------------------------------------------------------------*/
+
+    bool exist = false;
 
     exist = true;
     if(exist){
 
-      /*-------------------------------------------------------------*
-      if(ans_time < 10){
-        cout << endl;
-        for(int i = 0; i <= ans.num(); i++)
-          cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
-        cout << endl;
-      }
-      /--------------------------------------------------------------*/
-
       ans_time++;
       s.resize(ans_time);
-      for(int i = 0; i <= ans.num(); i++)
-        for(int j = 0; j < ans.term(i); j++)
-          s[ans_time - 1].push_back(ques_candidates.term(i));
-      Push_negative(t, s);
+      /*
+         for(int i = 0; i <= ans.num(); i++)
+         for(int j = 0; j < ans.term(i); j++)
+         s[ans_time - 1].push_back(ques_candidates.term(i));
+         Push_negative(t, s);
+         */
       return;
     }
   }
@@ -190,7 +191,9 @@ void solve::Push_negative(int t, vector< vector<int> > &s){
 
 }
 
-//Stack part
+/* -----------------------------------------------------------/
+ * ---------------------- STACK PART -------------------------/
+ * ----------------------------------------------------------*/
 template<class T>
 Stack<T>::Stack(int stackcapacity): capacity(stackcapacity){
   if(capacity < 1) cout << "Stack must be > 0" << endl;
