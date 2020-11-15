@@ -15,6 +15,8 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
 
   find(solutions); 
 
+  //Print_ans(solutions);
+
   return;
 }
 
@@ -74,15 +76,6 @@ void solve::find(vector< vector<int> > &s){
 }
 
 void solve::Push_ans(int t, vector< vector<int> > & s){
-  /*-------------------------------------------------------------*
-  if(ans_time < 10){
-    cout << endl;
-    for(int i = 0; i <= ans.num(); i++)
-      cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
-    cout << endl;
-  }
-  /--------------------------------------------------------------*/
-  
   vector <int> temp;
   for(int i = 0; i <= ans.num(); i++)
     for(int j = 0; j < ans.term(i); j++)
@@ -91,104 +84,53 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
     case 0:
       break; 
     case 1:
+      if(t == 0) break;
       for(int i = negative.num(); i >= 0; i--)
         if(Target.term(t) == Target.term(0) - negative.term(i))
-          s[ans_time - 1].push_back(negative.term(i));
+          temp.push_back(negative.term(i));
       break;
     case 2:
+      if(t == 0) break;
       for(int i = negative.num(); i >= 0; i--)
         for(int j = i; j >= 0; j--)
           if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j)))){
-            s[ans_time - 1].push_back(negative.term(i));
-            s[ans_time - 1].push_back(negative.term(j));
+            temp.push_back(negative.term(i));
+            temp.push_back(negative.term(j));
           }
       break;
   }
 
-
-
-  /*-------------------------------------------------------------*
-    if(ans_time < 10){
-    cout << "\n---Check---" << endl;
-    cout << "Ans : " << ans_time << endl;
-    for(int i = 0; i <= ans.num(); i++)
-    cout << ques_candidates.term(i) << " * " << ans.term(i) << endl;
-    cout << endl;
-    }
-    /--------------------------------------------------------------*/
-
   if(ans_time == 0){
     ans_time++;
     s.resize(ans_time);
-    for(int i = 0; i <= ans.num(); i++)
-      for(int j = 0; j < ans.term(i); j++)
-        s[ans_time - 1].push_back(ques_candidates.term(i));
-    Push_negative(t, s);
+    s[ans_time - 1].insert(s[ans_time - 1].end(), temp.begin(), temp.end());
     return;
   }
   else{
-    /*--------------------------------------------------------------/
-     *--------------------DEALL WITH THIS SECTION!------------------/
-     *-------------------------------------------------------------*/ 
-
-    /*--------------------------------------------------------------/
-      for(int k = 0; k < s.size(); k++)
-      for(int i = 0, temp = 0; (i <= ans.num()) && (temp < s[ans_time - 1].size()); i++)
-      for(int j = 0; (j < ans.term(i)) && (temp < s[ans_time - 1].size()); j++){
-    //cout << "check : " << ques_candidates.term(i) << " | " << s[ans_time - 1][temp] << endl;
-    if(ques_candidates.term(i) == s[ans_time - 1][temp])
-    return;
-    temp++;
-    }
-    //-------------------------------------------------------------*/
-
-    bool exist = false;
-
-    exist = true;
+    bool exist = true;
+    for(int i = 0; i < s.size(); i++)
+      if(temp == s[i])
+        exist = false;
+    
     if(exist){
 
       ans_time++;
       s.resize(ans_time);
-      /*
-         for(int i = 0; i <= ans.num(); i++)
-         for(int j = 0; j < ans.term(i); j++)
-         s[ans_time - 1].push_back(ques_candidates.term(i));
-         Push_negative(t, s);
-         */
+      s[ans_time - 1].insert(s[ans_time - 1].end(), temp.begin(), temp.end());
       return;
     }
   }
 }
 
-void solve::Push_negative(int t, vector< vector<int> > &s){
-  switch(neg_limit){
-    case 0:
-      break; 
-    case 1:
-      for(int i = negative.num(); i >= 0; i--)
-        if(Target.term(t) == Target.term(0) - negative.term(i))
-          s[ans_time - 1].push_back(negative.term(i));
-      break;
-    case 2:
-      for(int i = negative.num(); i >= 0; i--)
-        for(int j = i; j >= 0; j--)
-          if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j)))){
-            s[ans_time - 1].push_back(negative.term(i));
-            s[ans_time - 1].push_back(negative.term(j));
-          }
-      break;
-  }
-  ///*-----------------------------------------------------*/
-  if(ans_time < 10){
-    cout << endl;
-    cout << "-------------------------------------Ans : " << ans_time << endl;
-    for(int i = 0; i < s[ans_time - 1].size(); i++)
-      cout << s[ans_time - 1][i] << endl;
+// Print ANS
+void solve::Print_ans(vector< vector<int> > &s){
+  for(int i = 0; i < s.size(); i++){
+    cout << i;
+    for(int j = 0; j < s[i].size(); j++)
+      cout << " " << s[i][j];
     cout << endl;
   }
-  //-------------------------------------------------------*/
-
-
+  cout << "\n------------END---------------\n";
 }
 
 /* -----------------------------------------------------------/

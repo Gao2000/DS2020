@@ -44,7 +44,7 @@ class solve {
     void transform(int, int, int, vector<int>);
     void find(vector< vector<int> > &);
     void Push_ans(int, vector< vector<int> > &);
-    void Push_negative(int, vector< vector<int> > &);
+    void Print_ans(vector< vector<int> > &);
     solve() {}
 };
 
