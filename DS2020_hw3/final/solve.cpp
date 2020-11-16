@@ -26,7 +26,7 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
 
 void solve::transform(int target, int limit, int candidates_num, vector<int> candidates){
   //push the candidates
-  for(int i = 0; i < candidates_num; i++){
+  for(int i = candidates_num - 1; i >= 0; i--){
     if(candidates[i] < 0)
       negative.Push(candidates[i]);
     else if(candidates[i] > 0)
