@@ -26,24 +26,24 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
 
 void solve::transform(int target, int limit, int candidates_num, vector<int> candidates){
   //push the candidates
-  for(int i = candidates_num - 1; i >= 0; i--){
+  Stack<int> temp;
+  for(int i = 0; i < candidates_num; i++){
     if(candidates[i] < 0)
       negative.Push(candidates[i]);
     else if(candidates[i] > 0)
-      ques_candidates.Push(candidates[i]);
+      temp.Push(candidates[i]);
   }
-  
-  while(1){
-    if(negative.IsEmpty())
-      if(ques_candidates.Top() > target)
-        ques_candidates.Pop();
+  if(limit == 0)
+    while(1){
+      if(temp.Top() > target)
+        temp.Pop();
       else
         break;
-    else
-      if(ques_candidates.Top() > target - 2 * negative.term(0))
-        ques_candidates.Pop();
-      else
-        break;
+    }
+
+  while(!temp.IsEmpty()){
+    ques_candidates.Push(temp.Top());
+    temp.Pop();
   }
 
   //calculate all the possible target
@@ -90,15 +90,13 @@ void solve::find(int t,vector< vector<int> > &s){
   }
 }
 
-void solve::Push_ans(int t, vector< vector<int> > & s){
-  vector <int> temp;
-  for(int i = 0; i <= ans.num(); i++)
-    for(int j = 0; j < ans.term(i); j++)
-      temp.push_back(ques_candidates.term(i));
-  
+void solve::Push_ans(int t, vector< vector<int> > & s){ 
+  ans_time++;
+  s.resize(ans_time);
+
   if(t != 0){
     if(t <= negative.num()+1)
-      temp.push_back(negative.term(negative.num() - (t - 1)));
+      s[ans_time -1].push_back(negative.term(negative.num() - (t - 1)));
     else{
       int i;
       int shift = negative.num() + 1;
@@ -108,31 +106,16 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
         else
           shift += i;
       }
-      temp.push_back(negative.term(i));
-      temp.push_back(negative.term(negative.num() - (t - shift + 1)));
+      s[ans_time -1].push_back(negative.term(i));
+      s[ans_time -1].push_back(negative.term(negative.num() - (t - shift + 1)));
     }
   }
 
-  if(ans_time == 0){
-    ans_time++;
-    s.resize(ans_time);
-    s[ans_time - 1].insert(s[ans_time - 1].end(), temp.begin(), temp.end());
-    return;
-  }
-  else{
-    bool exist = true;
-/*
-    for(int i = s.size() - 1; i >= ans_time / 10; i--)
-      if(temp == s[i])
-        exist = false;
-*/    
-    if(exist){
-      ans_time++;
-      s.resize(ans_time);
-      s[ans_time - 1].insert(s[ans_time - 1].end(), temp.begin(), temp.end());
-      return;
-    }
-  }
+  for(int i = 0; i <= ans.num(); i++)
+    for(int j = 0; j < ans.term(i); j++)
+      s[ans_time - 1].push_back(ques_candidates.term(i));
+  
+  return;
 }
 
 // Print ANS
@@ -149,7 +132,8 @@ void solve::Print_ans(vector< vector<int> > &s){
 
 
 //---------------------------------------------------------------------------------------------//
-//
+
+
 /* -----------------------------------------------------------/
  * ---------------------- STACK PART -------------------------/
  * ----------------------------------------------------------*/
