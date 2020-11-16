@@ -94,6 +94,10 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
   ans_time++;
   s.resize(ans_time);
 
+  for(int i = 0; i <= ans.num(); i++)
+    for(int j = 0; j < ans.term(i); j++)
+      s[ans_time - 1].push_back(ques_candidates.term(i));
+ 
   if(t != 0){
     if(t <= negative.num()+1)
       s[ans_time -1].push_back(negative.term(negative.num() - (t - 1)));
@@ -110,11 +114,7 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
       s[ans_time -1].push_back(negative.term(negative.num() - (t - shift + 1)));
     }
   }
-
-  for(int i = 0; i <= ans.num(); i++)
-    for(int j = 0; j < ans.term(i); j++)
-      s[ans_time - 1].push_back(ques_candidates.term(i));
-  
+ 
   return;
 }
 

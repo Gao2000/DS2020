@@ -54,9 +54,6 @@ int main(int argc, const char * argv[])
             fin >> i;
             candidates.push_back(i);
         }
-        ///*--------------------------------/
-        cout << "This case: target=" << target << " limit=" << negative_limit << " number of candidates=" << candidates_num << endl;
-        ///--------------------------------*/
         if(candidates.empty()) break;
         find_solutions.calculate(target, negative_limit, candidates_num, candidates, sol);
         
