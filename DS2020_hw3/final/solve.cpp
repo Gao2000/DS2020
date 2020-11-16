@@ -102,16 +102,13 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
     if(t <= negative.num()+1)
       s[ans_time -1].push_back(negative.term(negative.num() - (t - 1)));
     else{
-      int i;
-      int shift = negative.num() + 1;
-      for(i = negative.num(); i >= 0; i--){
-        if((t - shift) <= i)
-          break;
-        else
-          shift += i;
-      }
+      int i, j;
+      for(i = negative.num(); i >= 0; i--)
+        for(j = i; j >= 0; j--)
+          if(Target.term(t) == (Target.term(0) - (negative.term(i) + negative.term(j))))
+            break;
       s[ans_time -1].push_back(negative.term(i));
-      s[ans_time -1].push_back(negative.term(negative.num() - (t - shift + 1)));
+      s[ans_time -1].push_back(negative.term(j));
     }
   }
  
