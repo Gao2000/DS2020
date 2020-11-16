@@ -11,7 +11,7 @@
 void solve::calculate(int target, int limit, int candidates_num, vector<int> candidates, vector< vector<int> > &solutions) {
 
   ans.clear(); ques_candidates.clear(); negative.clear(); Target.clear();
-  ans_time = 0; neg_limit = limit;
+  ans_time = 0; neg_limit = limit; sum = 0;
 
   transform(target, limit, candidates_num, candidates);
   while(!Target.IsEmpty()){
@@ -72,21 +72,29 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
 // recursive method to find the anwer
 void solve::find(int t,vector< vector<int> > &s){
   //calculate the current sum
+  
+  /*
   int current = 0;
   for(int i = 0; i <= ans.num(); i++)
     current += ques_candidates.term(i) * ans.term(i);
 
   if(Target.term(t) == current){
+  */
+  
+  if(Target.term(t) == sum){
     Push_ans(t, s); return;
   }
 
   if(ques_candidates.num() == ans.num())
     return;
 
-  for(int j = (Target.term(t) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
+  //for(int j = (Target.term(t) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
+  for(int j = (Target.term(t) - sum) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
     ans.Push(j);
+    sum += ques_candidates.term(ans.num()) * j;
     find(t, s);
-    ans.Pop();
+    sum -= ques_candidates.term(ans.num()) * j;
+    ans.Pop();   
   }
 }
 

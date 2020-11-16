@@ -41,6 +41,7 @@ class solve {
     Stack<int> ans, ques_candidates, negative, Target;
     int ans_time;
     int neg_limit;
+    int sum;
   public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
     void transform(int, int, int, vector<int>);
