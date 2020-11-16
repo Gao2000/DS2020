@@ -2,7 +2,9 @@
 //  set.h
 //  DS_hw3_Stack_and_queue 
 //
-
+/* ------------------------------- /
+ * ------ BRUTE SOLUTION --------- /
+ * -------------------------------*/
 #ifndef __DS_hw3_solve__
 #define __DS_hw3_solve__
 
@@ -42,7 +44,7 @@ class solve {
   public:
     void calculate(int, int, int, vector<int>, vector< vector<int> > &);
     void transform(int, int, int, vector<int>);
-    void find(vector< vector<int> > &);
+    void find(int, vector< vector<int> > &);
     void Push_ans(int, vector< vector<int> > &);
     void Print_ans(vector< vector<int> > &);
     solve() {}

@@ -2,7 +2,9 @@
 //  set.cpp
 //  DS_hw3_Stack_and_queue 
 //
-
+/* ------------------------------- /
+ * ------ BRUTE SOLUTION --------- /
+ * -------------------------------*/
 #include <algorithm>
 #include "solve.h"
 
@@ -12,10 +14,12 @@ void solve::calculate(int target, int limit, int candidates_num, vector<int> can
   ans_time = 0; neg_limit = limit;
 
   transform(target, limit, candidates_num, candidates);
+  while(!Target.IsEmpty()){
+    find(Target.num(), solutions);
+    Target.Pop();
+  }
 
-  find(solutions); 
-
-  Print_ans(solutions);
+//  Print_ans(solutions);
 
   return;
 }
@@ -66,31 +70,23 @@ void solve::transform(int target, int limit, int candidates_num, vector<int> can
 }
 
 // recursive method to find the anwer
-void solve::find(vector< vector<int> > &s){
+void solve::find(int t,vector< vector<int> > &s){
   //calculate the current sum
   int current = 0;
   for(int i = 0; i <= ans.num(); i++)
     current += ques_candidates.term(i) * ans.term(i);
 
-  if(ques_candidates.num() == ans.num()){
-    for(int i = 0; i <= Target.num(); i++)
-      if(Target.term(i) == current){        // =
-        Push_ans(i, s);
-        return;
-      }
-    return;
+  if(Target.term(t) == current){
+    Push_ans(t, s); return;
   }
 
-  for(int i = 0; i <= Target.num(); i++){
-    if(Target.term(i) < current)            // <
-      continue;
-    else{                                   // >
-      for(int j = (Target.term(i) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
-        ans.Push(j);
-        find(s);
-        ans.Pop();
-      }
-    }
+  if(ques_candidates.num() == ans.num())
+    return;
+
+  for(int j = (Target.term(t) - current) / ques_candidates.term(ans.num() + 1); j >= 0; j--){
+    ans.Push(j);
+    find(t, s);
+    ans.Pop();
   }
 }
 
@@ -125,10 +121,11 @@ void solve::Push_ans(int t, vector< vector<int> > & s){
   }
   else{
     bool exist = true;
+/*
     for(int i = s.size() - 1; i >= ans_time / 10; i--)
       if(temp == s[i])
         exist = false;
-    
+*/    
     if(exist){
       ans_time++;
       s.resize(ans_time);
